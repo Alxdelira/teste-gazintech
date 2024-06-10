@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: alxdelira
+      POSTGRES_PASSWORD: gazin123
+      POSTGRES_DB: db_gazin
+    ports:
+      - "5432:5432"
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
