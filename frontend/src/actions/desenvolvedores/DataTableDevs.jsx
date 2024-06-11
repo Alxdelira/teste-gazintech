@@ -10,15 +10,16 @@ import { useState } from "react";
 // import VisualizarAbastecimento from "./VisualizarAbastecimento";
 // import AlertWarning from "@/components/app/AlertWarning";
 
-export default function DataTableDevs() {
+export default function DataTableDevs({dados, searchParams}) {
 
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [devSelecionado, setDevSelecionado] = useState();
+    console.log(dados.value.data)
 
     return (
         <>
             <section className="mt-4">
-                <p>Total de Desenvolvedores:</p>
+                <p>Total de Desenvolvedores:{dados.desenvolvedores?.meta?.total}</p>
                 <Table className="mt-2">
                     <TableHeader>
                         <TableRow>
