@@ -1,40 +1,59 @@
-
-// se o método for get os dados serão querys (params) se não será dados mesmo tipo body para post ou patch etc...
-
-export const fetchServer = async (route, method, dados,  ...props) => {
+export const fetchServer = async (route, method, dados, ...props) => {
+    const URL_API = "http://localhost:3340/api/";
+  
     try {
-      let urlApi = "http://localhost:3340/api/";  
-  
       if (method === "GET" && dados) {
-        let urlSearch = new URLSearchParams(dados);
+        const urlSearch = new URLSearchParams(dados);
         route = `${route}?${urlSearch}`;
-      }        
-  
-      let headers = {
-        "Content-Type": "application/json",
-        "accept": "application/json",
       }
   
-      const response = await fetch(`${urlApi}${route}`, {
+      const methodsWithBody = ["POST", "PUT", "PATCH"];
+      const shouldHaveBody = methodsWithBody.includes(method);
+  
+      const headers = {
+        "Content-Type": "application/json",
+        "accept": "application/json",
+        ...props.headers,
+      };
+  
+      const response = await fetch(`${URL_API}${route}`, {
         ...props,
         method: method,
         headers: headers,
-        body: method !== "GET" && dados ? JSON.stringify(dados) : null
-      })
+        body: shouldHaveBody && dados ? JSON.stringify(dados) : null,
+      });
   
-      const responseData = await response.json();
+      if (!response.ok) {
+        return {
+          data: [],
+          error: true,
+          errors: [{ message: `HTTP error! status: ${response.status}` }],
+        };
+      }
   
-      // se erro retorna o array de dados vazio
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (jsonError) {
+        responseData = { error: true, message: "Failed to parse response as JSON" };
+      }
+  
       if (responseData?.error) {
-        return { data: [], error: true, errors: responseData?.errors ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }] };
+        return {
+          data: [],
+          error: true,
+          errors: responseData?.errors ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }],
+        };
       } else {
         return responseData;
       }
-  
     } catch (error) {
-      // se erro retorna o array de dados vazio
-  
-      return { data: [], error: true, errors: [{ message: error?.message ?? "Ocorreu um erro inesperado, contate o Administrador" }] };
+      return {
+        data: [],
+        error: true,
+        errors: [{ message: error?.message ?? "Ocorreu um erro inesperado, contate o Administrador" }],
+      };
     }
-  }
+  };
+  
   
