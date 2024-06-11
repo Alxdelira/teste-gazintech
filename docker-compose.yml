@@ -1,16 +1,32 @@
-version: '3.8'
-
 services:
   database:
+    restart: always
+    container_name: banco_postgres
     image: postgres:latest
     environment:
-      POSTGRES_USER: alxdelira
-      POSTGRES_PASSWORD: gazin123
-      POSTGRES_DB: db_gazin
+      - POSTGRES_USER=alxdelira
+      - POSTGRES_PASSWORD=gazin123
+      - POSTGRES_DB=db_gazin
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - database:/var/lib/postgresql/data
+
+  backend:
+    restart: always
+    container_name: backend
+    build: 
+      context: backend/
+      args:
+        PORT: 3340
+    ports:
+      - 3340:3340
+    environment:
+      - DB_USER=alxdelira
+      - DB_PASSWORD=gazin123
+      - DB_NAME=db_gazin
+      - DATABASE_URL=postgres://alxdelira:gazin123@database:5432/db_gazin
+      - PORT=3340
 
 volumes:
   database:
