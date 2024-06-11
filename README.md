@@ -70,12 +70,12 @@
   
 ### 🚀 Nível 2
 
-- [ ] Impedir remoção de nível com desenvolvedores associados               
-- [ ] Adicionar busca via query para a listagem de n íveis                  
-- [ ] Adicionar busca via query para a listagem de desenvolvedores          
-- [ ] Tratamento de Exceções / Retornos erros concisos                      
-- [ ] Paginação na listagem de níveis                                       
-- [ ] Paginação na listagem de desenvolvedores                              
+- [x] Impedir remoção de nível com desenvolvedores associados               
+- [x] Adicionar busca via query para a listagem de n íveis                  
+- [x] Adicionar busca via query para a listagem de desenvolvedores          
+- [x] Tratamento de Exceções / Retornos erros concisos                      
+- [x] Paginação na listagem de níveis                                       
+- [x] Paginação na listagem de desenvolvedores                              
 - [ ] Mensagens de sucesso e/ou erros (Ex. Toast Notification)              
 - [ ] Confirmação para exclusão de itens                                    
 - [ ] Ordenação das tabelas clicando no nome da coluna                      
