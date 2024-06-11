@@ -122,15 +122,21 @@ Você precisará do [Node.js](https://nodejs.org) e [Docker](https://www.docker.
 ```bash
 $ git clone https://github.com/Alxdelira/teste-gazintech.git
 $ cd teste-gazin-tech
-$ docker compose -f docker-compose.yml up -d
-
-docker compose -f docker-compose.yml up --build --force-recreate
 
 $ cd backend
 $ cp .env.example .env
+
+$ cd teste-gazin-tech
+$ docker compose -f docker-compose.yml up -d
+
+#Usando força bruta para recriar a imagem (Não recomendado)
+$ docker compose -f docker-compose.yml up --build --force-recreate
+
 $ npm install
 
 $ npx prisma migrate dev --name init
+
+$ npm run seed
 ```
 
 
@@ -140,6 +146,7 @@ $ npx prisma migrate dev --name init
 
 ```bash
 $ npm run dev
+
 ```
 Rodando a API no modo de desenvolvimento.<br/>
 ## Teste
