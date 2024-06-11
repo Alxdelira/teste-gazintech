@@ -5,6 +5,80 @@ export const devPaths = {
         get: {
             tags: ["Desenvolvedor"],
             summary: "Listar desenvolvedores",
+            parameters: [{
+                name: "per_page",
+                in: "query",
+                required: false,
+                description: "Quantidade de registros por página.",
+                schema: {
+                    type: "integer",
+                }
+            },
+            {
+                name: "current_page",
+                in: "query",
+                required: false,
+                description: "Número da página.",
+                schema: {
+                    type: "integer",
+                }
+            },
+            {
+                name: "nome",
+                in: "query",
+                required: false,
+                description: "Nome do desenvolvedor.",
+                schema: {
+                    type: "string",
+                }
+            },
+            {
+                name: "sexo",
+                in: "query",
+                required: false,
+                description: "Sexo do desenvolvedor.",
+                schema: {
+                    type: "string",
+                }
+            },
+            {
+                name: "idade",
+                in: "query",
+                required: false,
+                description: "Idade do desenvolvedor.",
+                schema: {
+                    type: "integer",
+                }
+            },
+            {
+                name: "data_nascimento",
+                in: "query",
+                required: false,
+                description: "Data de nascimento do desenvolvedor.",
+                schema: {
+                    type: "string",
+                }
+            },
+            {
+                name: "nivel",
+                in: "query",
+                required: false,
+                description: "Nível do desenvolvedor.",
+                schema: {
+                    type: "string",
+                }
+            },
+            {
+                name: "hobby",
+                in: "query",
+                required: false,
+                description: "Hobby do desenvolvedor.",
+                schema: {
+                    type: "string",
+                }
+            }
+        
+        ],
             responses: {
                 200: {
                     description: "Listagem de desenvolvedores.",
@@ -25,7 +99,15 @@ export const devPaths = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Desenvolvedor",
+                            type: "object",
+                            properties: {
+                                nome: { type: "string", example: "João da Silva" },
+                                idade: { type: "integer", example: 30 },
+                                hobby: { type: "string", example: "Jogar futebol" },
+                                data_nascimento: { type: "string", example: "1991-01-01" },
+                                sexo: { type: "string", example: "M" },
+                                nivel_id: { type: "integer", example: 1 },
+                            },
                         },
                     },
                 },
@@ -83,7 +165,15 @@ export const devPaths = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Desenvolvedor",
+                            type: "object",
+                            properties: {
+                                nome: { type: "string", example: "Marcelo de Assis" },
+                                idade: { type: "integer", example: 30 },
+                                hobby: { type: "string", example: "Vê Animes" },
+                                data_nascimento: { type: "string", example: "1991-04-01" },
+                                sexo: { type: "string", example: "M" },
+                                nivel_id: { type: "integer", example: 2 },
+                            },
                         },
                     },
                 },
@@ -122,6 +212,33 @@ export const nivelPaths = {
         get: {
             tags: ["Nivel"],
             summary: "Listar niveis",
+            parameters: [{
+                name: "per_page",
+                in: "query",
+                required: false,
+                description: "Quantidade de registros por página.",
+                schema: {
+                    type: "integer",
+                }
+            },
+            {
+                name: "current_page",
+                in: "query",
+                required: false,
+                description: "Número da página.",
+                schema: {
+                    type: "integer",
+                }
+            },
+            {
+                name: "nivel",
+                in: "query",
+                required: false,
+                description: "Nome do nivel.",
+                schema: {
+                    type: "string",
+                }
+            }],
             responses: {
                 200: {
                     description: "Listagem de niveis.",
@@ -142,7 +259,10 @@ export const nivelPaths = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Nivel",
+                            type: "object",
+                            properties: {
+                                nivel: { type: "string", example: "Pleno" },
+                            },
                         },
                     },
                 },
@@ -200,7 +320,10 @@ export const nivelPaths = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/Nivel",
+                            type: "object",
+                            properties: {
+                                nivel: { type: "string", example: "Sênior" },
+                            },
                         },
                     },
                 },
@@ -225,6 +348,11 @@ export const nivelPaths = {
                     },
                 },
             ],
-        }
-    }
-}
+            responses: {
+                204: {
+                    description: "Nivel deletado.",
+                },
+            },
+        },
+    },
+};

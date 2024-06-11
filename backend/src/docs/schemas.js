@@ -4,10 +4,7 @@ export const devSchema = {
     Desenvolvedor: {
         type: "object",
         properties: {
-            id: {
-                type: "integer",
-                description: "Identificador do desenvolvedor.",
-            },
+            
             nome: {
                 type: "string",
                 description: "Nome do desenvolvedor.",
