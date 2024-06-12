@@ -8,8 +8,8 @@ async function seed() {
     await nivelSeed()
     await prisma.desenvolvedor.deleteMany()
     console.log('Deletando dados da tabela Desenvolvedor')
-    await desenvolvedorSeed(10)
-    console.log('Inserindo dados na tabela Nivel')
+    await desenvolvedorSeed(50)
+    console.log("Desenvolvedor Inserido")
     await prisma.$disconnect()
     console.log('Conexão encerrada')
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "../ui/pagination";
 
-export default function PaginationComponent({ maxPageComponent = 3, totalPages, currentPage, querys, route, wordQueryPage = "pagina" }) {
+export default function PaginationComponent({ maxPageComponent = 3, totalPages, currentPage, querys, route, wordQueryPage = "page" }) {
 
   const [paginas, setPaginas] = useState([]);
 

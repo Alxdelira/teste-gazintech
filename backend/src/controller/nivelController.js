@@ -13,7 +13,7 @@ export default class NivelController {
         }
         const filters = {}; 
         if (nivel) {
-            filters.nivel = { contains: nivel };
+            filters.nivel = { contains: nivel, mode: 'insensitive' };
         }
         try {
             const niveis = await prisma.nivel.findMany({

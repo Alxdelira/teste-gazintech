@@ -16,7 +16,7 @@ export default function Menu() {
             id: 0, name: "Início", img: <Home color="white" width={menu ? "21px" : "25px"} />, imgAlt: "Ícone início", link: "/"
         },
         {
-            id: 1, name: "Desenvolvedores", img: <Github color="white" width={menu ? "21px" : "25px"} />, imgAlt: "Ícone início", link: "/desenvolvedores"
+            id: 1, name: "Desenvolvedores", img: <Github color="white" width={menu ? "21px" : "25px"} />, imgAlt: "Ícone início", link: "/desenvolvedores?page=1"
         },
         {
             id: 2, name: "Niveis", img: <AreaChart color="white" width={menu ? "21px" : "25px"} />, imgAlt: "Ícone início", link: "/niveis"

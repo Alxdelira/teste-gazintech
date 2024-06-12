@@ -7,11 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
 
-// import Modal from "@/components/app/Modal";
-// import VisualizarAbastecimento from "./VisualizarAbastecimento";
-// import AlertWarning from "@/components/app/AlertWarning";
-
-export default function DataTableDevs({ dados, searchParams }) {
+export default function DataTableDevs({ data, meta }) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [devSelecionado, setDevSelecionado] = useState(null);
 
@@ -24,14 +20,11 @@ export default function DataTableDevs({ dados, searchParams }) {
         setModalVisualizar(false);
         setDevSelecionado(null);
     };
-    console.log('Dados recebidos:', dados);
-
 
     return (
         <>
             <section className="mt-4">
-                <p>Total de Desenvolvedores: {dados?.meta?.total}</p>
-                {console.log(dados?.meta?.total)}
+                <p>Total de Desenvolvedores: {meta.total} </p>
                 <Table className="mt-2">
                     <TableHeader>
                         <TableRow>
@@ -44,13 +37,14 @@ export default function DataTableDevs({ dados, searchParams }) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {dados?.data?.map((desenvolvedor) => (
+                        {data.map((desenvolvedor) => (
                             <TableRow key={desenvolvedor.id}>
-                                <TableCell>{desenvolvedor.nome}</TableCell>
+                                <TableCell>{desenvolvedor?.nome}</TableCell>
                                 <TableCell>{desenvolvedor.data_nascimento}</TableCell>
                                 <TableCell>{desenvolvedor.hobby}</TableCell>
                                 <TableCell>{desenvolvedor.sexo}</TableCell>
                                 <TableCell>{desenvolvedor.nivel.nivel}</TableCell>
+                                {console.log(desenvolvedor)}
                                 <TableCell>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -82,15 +76,16 @@ export default function DataTableDevs({ dados, searchParams }) {
                 </Table>
             </section>
 
-            {dados?.meta?.total > 1 && (
+            {meta.total > 1 && (
                 <PaginationComponent
                     route={"/desenvolvedores"}
-                    currentPage={dados?.meta?.current_page}
-                    totalPages={dados?.meta?.last_page}
-                    querys={searchParams}
+                    currentPage={meta.current_page}
+                    totalPages={meta.last_page}
+                    querys={meta.querys}
                 />
             )}
 
+            {/* Ative o Modal quando necessário */}
             {/* <Modal isOpen={modalVisualizar} onClose={handleCloseModal} title={"Visualizar Desenvolvedor"} className={"w:5/6 lg:w-4/6 max-h-[90%]"}>
                 <VisualizarDesenvolvedor desenvolvedor={devSelecionado} />
             </Modal> */}

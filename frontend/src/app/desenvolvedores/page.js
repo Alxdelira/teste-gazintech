@@ -1,11 +1,14 @@
 import DataTableDevs from "@/actions/desenvolvedores/DataTableDevs";
+import FormBuscaDevs from "@/actions/desenvolvedores/FormBuscaDevs";
 import { Button } from "@/components/ui/button";
-import { fetchServer } from "@/utils/fetchServe";
+import { fetchDesenvolvedores } from "@/utils/fetchClient";
 import { Plus } from "lucide-react";
 
-export default function Desenvolvedores({searchParams}) {
-    const response = fetchServer("desenvolvedores", "GET", searchParams)
-    
+
+
+export default async function Desenvolvedores({ searchParams }) {
+    const { data: data, meta } = await fetchDesenvolvedores(searchParams);
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -13,10 +16,9 @@ export default function Desenvolvedores({searchParams}) {
                 <Button><Plus />Novo Desenvolvedor</Button>
             </div>
 
-            {/* <FormBuscarAbastecimentos querys={searchParams} /> */}
+            <FormBuscaDevs querys={searchParams} />
 
-            <DataTableDevs dados={response} searchParams={searchParams} />
-
+            <DataTableDevs data={data} meta={meta} />
         </>
-    )
+    );
 }
