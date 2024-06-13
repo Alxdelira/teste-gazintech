@@ -16,23 +16,17 @@ export default function FormBuscaDevs({ querys }) {
     const router = useRouter();
     const [isSearching, startTransition] = useTransition();
     const schema = z.object({
-        nome: z.string().trim().optional(),
-        hobby: z.string().optional(),
-        data_nascimento: z.string().optional(),
-        sexo: z.string().optional(),
-        nivel_id: z.number().optional()
+        nome: z.string().trim().optional(),          
+        
     });
 
     const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            nome: querys?.nome,
-            hobby: querys?.hobby,
-            data_nascimento: querys?.data_nascimento,
-            sexo: querys?.sexo,
-            nivel_id: querys?.nivel_id
+            nome: querys?.nome,      
+            
         }
-    });
+        });
 
     async function buscarDevs(data) {
         startTransition(() => {
@@ -62,70 +56,6 @@ export default function FormBuscaDevs({ querys }) {
                             )}
                         />
                     }>
-                        <FormField
-                            control={form.control}
-                            name="hobby"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="hobby">Hobby</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="hobby"
-                                            placeholder="Hobby"
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="data_nascimento"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="data_nascimento">Data de Nascimento</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="data_nascimento"
-                                            type="date"
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="sexo"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="sexo">Sexo</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="sexo"
-                                            placeholder="Sexo"
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="nivel_id"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="nivel_id">Nível</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="nivel_id"
-                                            placeholder="Nível"
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
                     </Filtros>
                 </form>
             </Form>

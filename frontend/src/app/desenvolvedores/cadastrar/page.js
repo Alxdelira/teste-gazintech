@@ -1,13 +1,14 @@
 'use client'
+import ComboboxAPI from "@/components/app/ComboBoxAPI";
 import ReactToastContainer from "@/components/app/ReactToastContainer";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl,  FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";;
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchApi, postData } from "@/utils/fetchClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import {  useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -16,38 +17,44 @@ export default function CadastrarDesenvolvedor() {
         nome: z.string({ required_error: "o nome é obrigatorio" }).trim(),
         data_nascimento: z.string({ required_error: "a data de nascimento é obrigatorio" }),
         hobby: z.string().trim().optional(),
-        sexo: z.string({ required_error: "o sexo é obrigatorio"}),
+        sexo: z.string({ required_error: "o sexo é obrigatorio" }),
+        nivel_id: z.object({ _id: z.string() }, { required_error: "o nivel é obrigatorio" })
     });
 
     const form = useForm({
         resolver: zodResolver(schema),
-        
+        defaultValues: {
+            nome: "",
+            data_nascimento: "",
+            hobby: "",
+            sexo: "",
+        }
+
     });
 
     async function cadastrarDesenvolvedor(data) {
         try {
-            const res = await fetchApi('desenvolvedores','POST', {
+            const res = await fetchApi('/desenvolvedores', 'POST', {
                 nome: data?.nome,
                 data_nascimento: data?.data_nascimento,
                 hobby: data?.hobby,
                 sexo: data?.sexo,
-                // nivel_id: data?.nivel_id
+                nivel_id: data?.nivel_id?._id
             });
-            console.log(res); // Adicione este log para verificar a resposta
-    
+
             if (res.error) {
                 toast.error(res.error.message);
             } else {
                 toast.success("Desenvolvedor cadastrado com sucesso");
                 form.reset();
-            }            
+            }
         } catch (error) {
-            console.error(error); // Adicione este log para verificar se há erros
-            toast.error("Ocorreu um erro inesperado, contate o Administrador");             
+            console.error(error);
+            toast.error("Ocorreu um erro inesperado, contate o Administrador");
         }
     }
-    
-    
+
+
     return (
         <>
             <h1 className="font-semibold text-2xl">Cadastrar Desenvolvedor</h1>
@@ -66,7 +73,7 @@ export default function CadastrarDesenvolvedor() {
                                             id="nome"
                                             placeholder="Nome"
                                             {...field}
-                                            />
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -128,23 +135,32 @@ export default function CadastrarDesenvolvedor() {
                                 </FormItem>
                             )}
                         />
-                        {/* <FormField
+                        <FormField
                             control={form.control}
                             name="nivel_id"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel htmlFor="nivel_id">Nível</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="nivel_id"
-                                            placeholder="Nível"
+                                        <ComboboxAPI
+                                            endpointPrimary={"/niveis"}
+                                            placeholderInputSearch={"Busque pelo nível"}
+                                            placeholderUnselected={"Selecione o nível"}
+                                            selecionado={field.value}
+                                            setSelecionado={field.onChange}
+                                            apiResponseAccess={"data"}
+                                            renderOption={(dados) => (
+                                                <div className="flex flex-col w-full">
+                                                    <span>{dados?.nivel}</span>                                                    
+                                                </div>
+                                            )}
+                                            selectedField={(selecionado) => selecionado?.nivel}
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        /> */}
+                        />
                     </div>
                     <div className="w-full flex gap-2 justify-end">
                         <Link href={"/desenvolvedores"} className="lg">

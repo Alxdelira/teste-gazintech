@@ -5,10 +5,6 @@ const NivelSchema = new moongoose.Schema({
     nivel: {
         type: String,
         required: true
-    },
-    desenvolvedor_id: {
-        type: moongoose.Schema.Types.ObjectId,
-        ref: 'desenvolvedor',
     }
 },
     {

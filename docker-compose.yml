@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: backend
@@ -12,7 +12,6 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3040
-      
 
   database:
     image: mongo:latest # Imagem do MongoDB
@@ -22,6 +21,18 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=seu_usuario
       - MONGO_INITDB_ROOT_PASSWORD=sua_senha
     ports:
-      - "27017:27017"  # Porta padrão do MongoDB
+      - "27017:27017" # Porta padrão do MongoDB
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
     volumes:
-  

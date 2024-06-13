@@ -42,15 +42,6 @@ export const devPaths = {
                 }
             },
             {
-                name: "idade",
-                in: "query",
-                required: false,
-                description: "Idade do desenvolvedor.",
-                schema: {
-                    type: "integer",
-                }
-            },
-            {
                 name: "data_nascimento",
                 in: "query",
                 required: false,
@@ -102,11 +93,10 @@ export const devPaths = {
                             type: "object",
                             properties: {
                                 nome: { type: "string", example: "João da Silva" },
-                                idade: { type: "integer", example: 30 },
                                 hobby: { type: "string", example: "Jogar futebol" },
                                 data_nascimento: { type: "string", example: "1991-01-01" },
                                 sexo: { type: "string", example: "M" },
-                                nivel_id: { type: "integer", example: 1 },
+                                nivel_id: { type: "string", example: 1 },
                             },
                         },
                     },
@@ -130,7 +120,7 @@ export const devPaths = {
                     required: true,
                     description: "Identificador do desenvolvedor.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],
@@ -157,7 +147,7 @@ export const devPaths = {
                     required: true,
                     description: "Identificador do desenvolvedor.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],
@@ -168,11 +158,10 @@ export const devPaths = {
                             type: "object",
                             properties: {
                                 nome: { type: "string", example: "Marcelo de Assis" },
-                                idade: { type: "integer", example: 30 },
                                 hobby: { type: "string", example: "Vê Animes" },
                                 data_nascimento: { type: "string", example: "1991-04-01" },
                                 sexo: { type: "string", example: "M" },
-                                nivel_id: { type: "integer", example: 2 },
+                                nivel_id: { type: "string", example: 2 },
                             },
                         },
                     },
@@ -194,7 +183,7 @@ export const devPaths = {
                     required: true,
                     description: "Identificador do desenvolvedor.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],
@@ -285,7 +274,7 @@ export const nivelPaths = {
                     required: true,
                     description: "Identificador do nivel.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],
@@ -312,7 +301,7 @@ export const nivelPaths = {
                     required: true,
                     description: "Identificador do nivel.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],
@@ -344,7 +333,7 @@ export const nivelPaths = {
                     required: true,
                     description: "Identificador do nivel.",
                     schema: {
-                        type: "integer",
+                        type: "string",
                     },
                 },
             ],

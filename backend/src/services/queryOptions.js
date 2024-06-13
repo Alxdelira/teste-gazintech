@@ -11,7 +11,7 @@ function buildQuery(params) {
 function getPaginationOptions(page, perPage) {
     return {
         page: parseInt(page, 10) || 1,
-        limit: parseInt(perPage, 10) || 10
+        limit: parseInt(perPage, 5) || 5
     };
 }
 

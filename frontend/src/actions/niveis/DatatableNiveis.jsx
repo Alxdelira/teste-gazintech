@@ -17,8 +17,6 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
-import Modal from "@/components/app/Modal";
-// import VisualizarDesenvolvedor from "./VisualizarDesenvolvedor";
 
 export default function DataTableNiveis({ data, meta, searchParams }) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
@@ -38,11 +36,6 @@ export default function DataTableNiveis({ data, meta, searchParams }) {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 ),                
-            },
-            {
-                accessorKey: "desenvolvedor_id",
-                header: "Quantidade Desenvolvedor",
-                cell: ({ row }) => (row.getValue("desenvolvedor_id") || "Nenhum Desenvolvedor"),
             },
             {
                 id: "actions",
@@ -144,14 +137,7 @@ export default function DataTableNiveis({ data, meta, searchParams }) {
                 />
             )}
 
-            <Modal
-                isOpen={modalVisualizar}
-                onClose={handleCloseModal}
-                title={"Visualizar Desenvolvedor"}
-                className={"w:5/6 lg:w-4/6 max-h-[90%]"}
-            >
-                {/* <VisualizarDesenvolvedor desenvolvedor={devSelecionado} /> */}
-            </Modal>
+            
         </>
     );
 }

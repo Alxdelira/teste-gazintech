@@ -35,7 +35,7 @@ export const fetchApi = async (route, method, data, ...props) => {
       method: method,
       headers: headers,
       body: method !== "GET" && data ? JSON.stringify(data) : null,
-      cache: "no-store"
+      cache: "no-store" ,
     })
 
     const responseData = await response.json();

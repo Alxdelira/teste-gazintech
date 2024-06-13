@@ -9,7 +9,7 @@ import DataTableNiveis from "@/actions/niveis/DatatableNiveis";
 
 
 export default async function Niveis({ searchParams }) {
-    const { data: data, meta } = await fetchApi('niveis','GET', searchParams);
+    const { data: data, meta } = await fetchApi('/niveis','GET', searchParams);
     console.log(data, meta);
     
 

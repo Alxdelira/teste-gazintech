@@ -1,3 +1,4 @@
+import DesenvolvedorModel from "../model/desenvolvedorModel.js";
 import NivelModel from "../model/nivelModel.js";
 import { buildQuery, getPaginationOptions } from "../services/queryOptions.js";
 
@@ -5,8 +6,8 @@ import { buildQuery, getPaginationOptions } from "../services/queryOptions.js";
 export default class NivelController {
     static async listarNiveis(req, res) {
         try {
-            const { nivel, desenvolvedor_id, page, perPage } = req.query;
-            const query = buildQuery({ nivel, desenvolvedor_id });
+            const { nivel, page, perPage } = req.query;
+            const query = buildQuery({ nivel });
             const options = getPaginationOptions(page, perPage);
 
             const niveis = await NivelModel.paginate(query, options);
@@ -22,6 +23,7 @@ export default class NivelController {
             });
 
         } catch (error) {
+            console.log(error);
             return res.status(500).json({ error: true, code: 500, message: 'Erro interno no servidor!' });
         }
     }
@@ -44,12 +46,10 @@ export default class NivelController {
         try {
             const {
                 nivel,
-                desenvolvedor_id
             } = req.body;
 
             const novoNivel = new NivelModel({
                 nivel,
-                desenvolvedor_id
             });
 
             await novoNivel.save();
@@ -62,11 +62,10 @@ export default class NivelController {
     static async atualizarNivel(req, res) {
         try {
             const { id } = req.params;
-            const { nivel, desenvolvedor_id } = req.body;
+            const { nivel } = req.body;
 
             const nivelAtualizado = await NivelModel.findByIdAndUpdate(id, {
-                nivel,
-                desenvolvedor_id
+                nivel
             }, { new: true });
 
             if (!nivelAtualizado) {
@@ -83,12 +82,24 @@ export default class NivelController {
         try {
             const { id } = req.params;
             const nivel = await NivelModel.findById(id);
+           
+
+            const niveis = await NivelModel.paginate();
+            const { docs } = niveis;
+            const nivelIds = docs.map(nivel => nivel._id);
+            const DesenvolvedoresPorNivel = await DesenvolvedorModel.aggregate([
+                { $match: { nivel_id: { $in: nivelIds } } },
+                { $group: { _id: "$nivel_id" } }
+            ]);
+
+            const qtdDev = DesenvolvedoresPorNivel[0]._id.toString();
+            console.log( qtdDev, req.params.id);
 
             if (!nivel) {
                 return res.status(404).json({ error: true, code: 404, message: 'Nivel não encontrado' });
             }
-            if (desenvolvedor_id) {
-                return res.status(400).json({ error: true, code: 404, message: 'Nivel não pode ser deletado, pois está associado a um desenvolvedor' });
+            if (qtdDev === req.params.id) {
+                return res.status(400).json({ error: true, code: 400, message: 'Nivel não pode ser deletado, pois está associado a um desenvolvedor' });
             }
 
             await NivelModel.findByIdAndDelete(id);
@@ -96,6 +107,7 @@ export default class NivelController {
 
         }
         catch (error) {
+            console.log(error);
             return res.status(500).json({ error: true, code: 500, message: 'Erro interno no servidor!' });
         }
     }

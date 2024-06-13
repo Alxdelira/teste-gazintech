@@ -6,11 +6,15 @@ import { buildQuery, getPaginationOptions } from "../services/queryOptions.js";
 export default class DesenvolvvedoresController {
     static async listarDesenvolvedores(req, res) {
         try {
-            const { nome, sexo, data_nascimento, hobby, page, perPage } = req.query;
-            const query = buildQuery({ nome, sexo, data_nascimento, hobby });
+            const { nome, sexo, data_nascimento, hobby, page, perPage, nivel_id } = req.query;
+            const query = buildQuery({ nome, sexo, data_nascimento, hobby, nivel_id});
             const options = getPaginationOptions(page, perPage);
 
             const desenvolvedores = await DesenvolvedorModel.paginate(query, options);
+
+            const { docs } = desenvolvedores;
+
+            await DesenvolvedorModel.populate(docs, { path: 'nivel_id' });
             
             return res.status(200).json({
                 data: desenvolvedores.docs,
@@ -23,13 +27,14 @@ export default class DesenvolvvedoresController {
             });
 
         } catch (error) {
+            console.log(error);
             return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
         }
     }
     static async listarDesenvolvedorId(req, res) {
         try {
             const { id } = req.params;
-            const desenvolvedor = await DesenvolvedorModel.findById(id);
+            const desenvolvedor = await DesenvolvedorModel.findById(id).populate('nivel_id');
 
             if (!desenvolvedor) {
                 return res.status(404).json({ error: true, code: 404, message: 'Desenvolvedor não encontrado' });
@@ -59,7 +64,7 @@ export default class DesenvolvvedoresController {
                 nivel_id
             });
 
-            if (!novoDesenvolvedor) {
+            if (!nome || !sexo || !data_nascimento || !hobby || !nivel_id) {
                 return res.status(400).json({ error: true, code: 400, message: 'Dados inválidos' });
             }
 

@@ -8,7 +8,7 @@ import Link from "next/link";
 
 
 export default async function Desenvolvedores({ searchParams }) {
-    const { data: data, meta } = await fetchApi('desenvolvedores','GET', searchParams);
+    const { data: data, meta } = await fetchApi('/desenvolvedores','GET', searchParams);
     console.log(data, meta);
     
 

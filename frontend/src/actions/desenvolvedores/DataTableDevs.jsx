@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
     useReactTable,
     getCoreRowModel,
@@ -19,11 +19,13 @@ import { Eye, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
 import Modal from "@/components/app/Modal";
 import VisualizarDesenvolvedor from "./VisualizarDesenvolvedor";
+import { formatarData, mascaraSexo } from "@/utils/mascara";
+import RemoverDev from "./RemoverDev";
 
 export default function DataTableDevs({ data, meta, searchParams }) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
-    const [devSelecionado, setDevSelecionado] = useState(null);
-    const [sorting, setSorting] = useState([]);
+    const [modalRemover, setModalRemover] = useState(false);
+    const [devSelecionado, setDevSelecionado] = useState(false);
 
     const columns = useMemo(
         () => [
@@ -50,6 +52,9 @@ export default function DataTableDevs({ data, meta, searchParams }) {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 ),
+                cell: ({ row }) => {
+                    return formatarData(row.original.data_nascimento);
+                }
             },
             {
                 accessorKey: "hobby",
@@ -74,11 +79,14 @@ export default function DataTableDevs({ data, meta, searchParams }) {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 ),
+                cell: ({ row }) => {
+                    return mascaraSexo(row.original.sexo);
+                }
             },
             {
                 accessorKey: "nivel_id",
                 header: "Nível",
-                cell: ({ row }) => (row.getValue("nivel_id") || "Nenhum Nível"),
+                cell: ({ row }) => (row.original.nivel_id ? row.original.nivel_id.nivel : "Não cadastrado"),
             },
             {
                 id: "actions",
@@ -104,7 +112,9 @@ export default function DataTableDevs({ data, meta, searchParams }) {
                             >
                                 <Pencil className="h-4 w-4" /> Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="flex gap-2">
+                            <DropdownMenuItem
+                                onClick={() => handleRemover(row.original)}
+                                className="flex gap-2">
                                 <Trash2 className="h-4 w-4" /> Excluir
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -114,6 +124,8 @@ export default function DataTableDevs({ data, meta, searchParams }) {
         ],
         []
     );
+
+
 
     const table = useReactTable({
         data,
@@ -131,6 +143,16 @@ export default function DataTableDevs({ data, meta, searchParams }) {
         setModalVisualizar(false);
         setDevSelecionado(null);
     };
+
+    const handleRemover = (desenvolvedor) => {
+        setModalRemover(true);
+        setDevSelecionado(desenvolvedor);
+    }
+
+    const handleModalRemover = () => {
+        setModalRemover(false);
+        setDevSelecionado(null);
+    }
 
     return (
         <>
@@ -180,6 +202,19 @@ export default function DataTableDevs({ data, meta, searchParams }) {
                 className={"w:5/6 lg:w-4/6 max-h-[90%]"}
             >
                 <VisualizarDesenvolvedor desenvolvedor={devSelecionado} />
+            </Modal>
+            <Modal
+                isOpen={modalRemover}
+                onClose={handleModalRemover}
+                title={"Remover Desenvolvedor"}
+                className={"w:3/8 lg:w-3/8 max-h-[90%]"}
+
+            >
+                <RemoverDev
+                    onRemove={handleModalRemover}
+                    onClick={handleModalRemover}
+                    desenvolvedor={devSelecionado}
+                />
             </Modal>
         </>
     );
