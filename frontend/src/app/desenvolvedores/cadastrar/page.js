@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl,  FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";;
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { postData } from "@/utils/fetchClient";
+import { fetchApi, postData } from "@/utils/fetchClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import {  useForm } from "react-hook-form";
@@ -27,7 +27,7 @@ export default function CadastrarDesenvolvedor() {
 
     async function cadastrarDesenvolvedor(data) {
         try {
-            const res = await postData('desenvolvedores', {
+            const res = await fetchApi('desenvolvedores','POST', {
                 nome: data?.nome,
                 data_nascimento: data?.data_nascimento,
                 hobby: data?.hobby,

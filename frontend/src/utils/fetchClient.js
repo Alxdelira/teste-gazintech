@@ -1,70 +1,66 @@
 
-import axios from 'axios';
+// Função para verificar se onde a função está sendo chamada esta do lado do servidor ou esta do lado do cliente
+const verificarRenderizacao = () => {
+  if (typeof window !== "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL;
+  } else {
+    "use server";
 
-export async function getData(route, query) {
-  try {
-    const params = new URLSearchParams(query).toString();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${route}?${params}`);
-
-    if (!response.data) {
-      return { data: [], meta: { total: 0 }, error: { message: 'Ocorreu um erro inesperado, contate o Administrador' } };
-    }
-
-    return response.data;
-  } catch (error) {
-    return { data: [], meta: { total: 0 }, error: { message: 'Ocorreu um erro inesperado, contate o Administrador' } };
+    return process.env.API_URL;
   }
 }
 
+// Função fetchApi criada para garantir que todas requisições passem por aqui, garantir mesmo retorno e facilitar as validações em um único lugar
 
-export async function postData(route, data) {
+// se o método for get os dados serão querys (params) se não será dados mesmo tipo body para post ou patch etc...
+// o isFile é para verificar se está utilizando para requisições de imagem mudar os headers
+export const fetchApi = async (route, method, data,meta, ...props) => {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${route}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    // chama  função para pegar o env da API
+    let urlApi = verificarRenderizacao();
 
-    if (!response.data) {
-      return { data: [], error: { message: 'Ocorreu um erro inesperado, contate o Administrador' } };
+    // se for método GET recebe as querys e cria uma URL já com encode
+    if (method === "GET" && data) {
+      let urlSearch = new URLSearchParams(data);
+      route = `${route}?${urlSearch}`;
     }
 
-    return response.data;
+    let headers = {
+      "Content-Type": "application/json"
+    };
+
+
+    const response = await fetch(`${urlApi}${route}`, {
+      ...props,
+      method: method,
+      headers: headers,
+      body: method !== "GET" && data ? JSON.stringify(data) : null,
+      // cache: "no-cache"
+    })
+
+    const responseData = await response.json();
+
+    // se erro retorna o array de dados vazio
+    if (responseData?.error) {
+      return {
+        data: [],
+        meta: responseData?.meta ?? {},
+        error: true,
+        errors: responseData?.error ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
+      };
+
+    } else {
+      return responseData;
+    }
+
   } catch (error) {
-    return { data: [], error: { message: error?.message ?? 'Ocorreu um erro inesperado, contate o Administrador' } };
-  }
-}
+    // se erro retorna o array de dados vazio
 
-export async function editData(route, data, id) {
-  try {
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}${route}/${id}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-    );
-
-    if (!response.data) {
-      return { data: [], error: { message: 'Ocorreu um erro inesperado, contate o Administrador' } };
-    }
-
-    return response.data;
-  } catch (error) {
-    return { data: [], error: { message: error?.message ?? 'Ocorreu um erro inesperado, contate o Administrador' } };
-  }
-}
-
-export async function deleteData(route) {
-  try {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}${route}`);
-
-    if (!response.data) {
-      return { data: [], error: { message: 'Ocorreu um erro inesperado, contate o Administrador' } };
-    }
-
-    return response.data;
-  } catch (error) {
-    return { data: [], error: { message: error?.message ?? 'Ocorreu um erro inesperado, contate o Administrador' } };
+    return {
+      data: [],
+      error: true,
+      errors: [{ message: error?.message ?? "Ocorreu um erro inesperado, contate o Administrador" }]
+    };
   }
 }
 

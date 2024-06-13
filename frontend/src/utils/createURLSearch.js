@@ -23,7 +23,7 @@ export function createURLSearch(route, querys) {
   for (let query in querys) {
 
     // variavel para verificar se o valor é o id dentro do objeto ou apenas o valor para validar no if abaixo, pois o id dentro do objeto pode ser vazio também, por isso é usado apenas aqui
-    let queryValue = querys[query]?.hasOwnProperty("_id") ? querys[query]?._id : querys[query]; 
+    let queryValue = querys[query]?.hasOwnProperty("id") ? querys[query]?.id : querys[query]; 
 
     // verificar se a query é vazia, undefined, null ou all, o all é porque o shadcnui não recebe string vazia nas options ai o all serve para dizer que seria todas as opções
     if (queryValue === undefined || queryValue === "" || queryValue === null || queryValue === "all") {

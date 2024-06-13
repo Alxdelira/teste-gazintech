@@ -9,7 +9,7 @@ import PaginationComponent from "@/components/app/PaginationComponent";
 import Modal from "@/components/app/Modal";
 import VisualizarDesenvolvedor from "./VisualizarDesenvolvedor";
 
-export default function DataTableDevs({ data, meta }) {
+export default function DataTableDevs({ data, meta, searchParams}) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [devSelecionado, setDevSelecionado] = useState(null);
 
@@ -87,7 +87,7 @@ export default function DataTableDevs({ data, meta }) {
                     route={"/desenvolvedores"}
                     currentPage={meta.current_page}
                     totalPages={meta.last_page}
-                    querys={meta.querys}
+                    querys={searchParams}
                 />
             )
         }
