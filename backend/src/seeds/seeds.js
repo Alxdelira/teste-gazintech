@@ -12,16 +12,13 @@ db.once("open", () => {
 
 async function seed() {
     try {
-        // Aguardar a conexão ser estabelecida
         await db;
 
-        // Limpar coleções
         await NivelModel.deleteMany();
         console.log('Coleção NivelModel limpa.');
         await DesenvolvedorModel.deleteMany();
         console.log('Coleção DesenvolvedorModel limpa.');
 
-        // Executar seeds
         await nivelSeed();
         console.log('Nivel seed executado com sucesso.');
         await desenvolvedorSeed(10);
@@ -31,13 +28,11 @@ async function seed() {
     } catch (error) {
         console.error('Erro durante o processo de seed:', error);
     } finally {
-        // Fechar a conexão com o banco de dados
         await db.close();
         console.log('Conexão com o banco fechada.');
     }
 }
 
-// Executar a função de seed
 seed();
 
 
