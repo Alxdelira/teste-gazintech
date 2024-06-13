@@ -21,7 +21,7 @@ async function seed() {
 
         await nivelSeed();
         console.log('Nivel seed executado com sucesso.');
-        await desenvolvedorSeed(10);
+        await desenvolvedorSeed(50);
         console.log('Desenvolvedor seed executado com sucesso.');
 
         console.log('Seed executado com sucesso!');

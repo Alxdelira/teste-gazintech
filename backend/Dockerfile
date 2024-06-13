@@ -19,11 +19,6 @@ COPY package.json package-lock.json ./
 # Instala as dependências do projeto usando 'npm ci' para garantir a reprodução exata das dependências
 RUN npm ci
 
-COPY ./prisma prisma
-# Gera o cliente Prisma dentro do contêiner
-RUN npx prisma generate
-
-
 # Copia todo o resto do projeto para dentro do contêiner
 COPY . .
 

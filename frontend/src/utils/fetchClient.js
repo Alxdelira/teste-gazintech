@@ -35,7 +35,7 @@ export const fetchApi = async (route, method, data, ...props) => {
       method: method,
       headers: headers,
       body: method !== "GET" && data ? JSON.stringify(data) : null,
-      cache: "no-cache"
+      cache: "no-store"
     })
 
     const responseData = await response.json();
@@ -46,7 +46,7 @@ export const fetchApi = async (route, method, data, ...props) => {
         data: [],
         meta: responseData?.meta ?? {},
         error: true,
-        errors: responseData?.error ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
+        message: responseData?.error ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
       };
 
     } else {
@@ -58,8 +58,9 @@ export const fetchApi = async (route, method, data, ...props) => {
 
     return {
       data: [],
+      meta: {},
       error: true,
-      errors: [{ message: error?.message ?? "Ocorreu um erro inesperado, contate o Administrador" }]
+      message: [{ message: error?.message ?? "Ocorreu um erro inesperado, contate o Administrador" }]
     };
   }
 }

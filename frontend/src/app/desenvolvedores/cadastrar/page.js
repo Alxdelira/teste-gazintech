@@ -17,7 +17,6 @@ export default function CadastrarDesenvolvedor() {
         data_nascimento: z.string({ required_error: "a data de nascimento é obrigatorio" }),
         hobby: z.string().trim().optional(),
         sexo: z.string({ required_error: "o sexo é obrigatorio"}),
-        idade: z.coerce.number({ required_error: "a idade é obrigatorio", invalid_type_error: "idade deve ser um número!"}),
     });
 
     const form = useForm({

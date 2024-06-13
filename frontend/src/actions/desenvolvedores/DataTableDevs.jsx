@@ -1,17 +1,126 @@
-"use client";
-
-import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+'use client'
+import { useState, useMemo } from "react";
+import {
+    useReactTable,
+    getCoreRowModel,
+    getSortedRowModel,
+    flexRender,
+} from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
 import Modal from "@/components/app/Modal";
 import VisualizarDesenvolvedor from "./VisualizarDesenvolvedor";
 
-export default function DataTableDevs({ data, meta, searchParams}) {
+export default function DataTableDevs({ data, meta, searchParams }) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [devSelecionado, setDevSelecionado] = useState(null);
+    const [sorting, setSorting] = useState([]);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "nome",
+                header: ({ column }) => (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                    >
+                        Nome
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: "data_nascimento",
+                header: ({ column }) => (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                    >
+                        Data de nascimento
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: "hobby",
+                header: ({ column }) => (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                    >
+                        Hobby
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: "sexo",
+                header: ({ column }) => (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                    >
+                        Sexo
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: "nivel_id",
+                header: "Nível",
+                cell: ({ row }) => (row.getValue("nivel_id") || "Nenhum Nível"),
+            },
+            {
+                id: "actions",
+                cell: ({ row }) => (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                            <DropdownMenuItem
+                                onClick={() => handleVisualizar(row.original)}
+                                className="flex gap-2"
+                            >
+                                <Eye className="h-4 w-4" /> Visualizar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => handleEditar(row.original)}
+                                className="flex gap-2"
+                            >
+                                <Pencil className="h-4 w-4" /> Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex gap-2">
+                                <Trash2 className="h-4 w-4" /> Excluir
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                ),
+            },
+        ],
+        []
+    );
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+    });
 
     const handleVisualizar = (desenvolvedor) => {
         setModalVisualizar(true);
@@ -29,71 +138,49 @@ export default function DataTableDevs({ data, meta, searchParams}) {
                 <p>Total de Desenvolvedores: {meta.total} </p>
                 <Table className="mt-2">
                     <TableHeader>
-                        <TableRow>
-                            <TableHead>Nome</TableHead>
-                            <TableHead>Data de nascimento</TableHead>
-                            <TableHead>Hobby</TableHead>
-                            <TableHead>Sexo</TableHead>
-                            <TableHead>Nível</TableHead>
-                            <TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {data.map((desenvolvedor) => (
-                            <TableRow key={desenvolvedor.id}>
-                                <TableCell>{desenvolvedor?.nome}</TableCell>
-                                <TableCell>{desenvolvedor?.data_nascimento}</TableCell>
-                                <TableCell>{desenvolvedor?.hobby}</TableCell>
-                                <TableCell>{desenvolvedor?.sexo}</TableCell>
-                                <TableCell>{desenvolvedor?.nivel_id || "Nenhum Nivel"}</TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <span className="sr-only">Open menu</span>
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                            <DropdownMenuItem
-                                                onClick={() => handleVisualizar(desenvolvedor)}
-                                                className="flex gap-2"
-                                            >
-                                                <Eye className="h-4 w-4" /> Visualizar
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                onClick={() =>  handleEditar(desenvolvedor)}
-                                                className="flex gap-2">
-                                            <Pencil className="h-4 w-4" /> Editar
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="flex gap-2">
-                                            <Trash2 className="h-4 w-4" /> Excluir
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
                             </TableRow>
                         ))}
-                </TableBody>
-            </Table>
-        </section >
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </section>
 
-        {
-            meta.total > 1 && (
+            {meta.total > 1 && (
                 <PaginationComponent
                     route={"/desenvolvedores"}
                     currentPage={meta.current_page}
                     totalPages={meta.last_page}
                     querys={searchParams}
                 />
-            )
-        }
+            )}
 
-    {/* Ative o Modal quando necessário */ }
-    <Modal isOpen={modalVisualizar} onClose={handleCloseModal} title={"Visualizar Desenvolvedor"} className={"w:5/6 lg:w-4/6 max-h-[90%]"}>
-        <VisualizarDesenvolvedor desenvolvedor={devSelecionado} />
-    </Modal>
+            <Modal
+                isOpen={modalVisualizar}
+                onClose={handleCloseModal}
+                title={"Visualizar Desenvolvedor"}
+                className={"w:5/6 lg:w-4/6 max-h-[90%]"}
+            >
+                <VisualizarDesenvolvedor desenvolvedor={devSelecionado} />
+            </Modal>
         </>
     );
 }

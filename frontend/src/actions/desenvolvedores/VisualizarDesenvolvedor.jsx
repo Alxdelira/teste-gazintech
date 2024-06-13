@@ -2,33 +2,29 @@
 
 export default function VisualizarDesenvolvedor({ desenvolvedor }) {
     return (
-        <>
-            <div className="grid grid-cols-2 gap-2">
-                <div>
-                    <label className="font-semibold">Nome</label>
-                    <p>{desenvolvedor?.nome}</p>
-                </div>
-                <div>
-                    <label className="font-semibold">Data de Nascimento</label>
-                    <p>{desenvolvedor?.data_nascimento}</p>
-                </div>
-                <div>
-                    <label className="font-semibold">Hobby</label>
-                    <p>{desenvolvedor?.hobby}</p>
-                </div>
-                <div>
-                    <label className="font-semibold">Sexo</label>
-                    <p>{desenvolvedor?.sexo}</p>
-                </div>
-                <div>
-                    <label className="font-semibold">Idade</label>
-                    <p>{desenvolvedor?.idade}</p>
-                </div>
-                <div>
-                    <label className="font-semibold">Nível</label>
-                    <p>{desenvolvedor?.nivel?.nivel || "Nenhum Nível"}</p>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="shadow-md p-4 rounded-lg bg-white">
+                <label className="font-semibold block mb-1">Nome</label>
+                <p className="text-gray-800">{desenvolvedor?.nome || "Não informado"}</p>
             </div>
-        </>
-    )
+            <div className="shadow-md p-4 rounded-lg bg-white">
+                <label className="font-semibold block mb-1">Data de Nascimento</label>
+                <p className="text-gray-800">{desenvolvedor?.data_nascimento || "Não informado"}</p>
+            </div>
+            <div className="shadow-md p-4 rounded-lg bg-white">
+                <label className="font-semibold block mb-1">Sexo</label>
+                <p className="text-gray-800">{desenvolvedor?.sexo || "Não informado"}</p>
+            </div>
+            <div className="shadow-md p-4 rounded-lg bg-white">
+                <label className="font-semibold block mb-1">Hobby</label>
+                <p className="text-gray-800">{desenvolvedor?.hobby || "Não informado"}</p>
+            </div>
+            <div className="shadow-md p-4 rounded-lg bg-white">
+                <label className="font-semibold block mb-1">Nível</label>
+                <p className="text-gray-800">{desenvolvedor?.nivel_id || "Nenhum Nível"}</p>
+            </div>
+        </div>
+
+    );
 }
+
