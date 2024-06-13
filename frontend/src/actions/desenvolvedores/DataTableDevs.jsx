@@ -34,7 +34,6 @@ export default function DataTableDevs({ data, meta, searchParams}) {
                             <TableHead>Data de nascimento</TableHead>
                             <TableHead>Hobby</TableHead>
                             <TableHead>Sexo</TableHead>
-                            <TableHead>Idade</TableHead>
                             <TableHead>Nível</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
@@ -46,8 +45,7 @@ export default function DataTableDevs({ data, meta, searchParams}) {
                                 <TableCell>{desenvolvedor?.data_nascimento}</TableCell>
                                 <TableCell>{desenvolvedor?.hobby}</TableCell>
                                 <TableCell>{desenvolvedor?.sexo}</TableCell>
-                                <TableCell>{desenvolvedor?.idade}</TableCell>
-                                <TableCell>{desenvolvedor?.nivel?.nivel || "Nenhum Nivel"}</TableCell>
+                                <TableCell>{desenvolvedor?.nivel_id || "Nenhum Nivel"}</TableCell>
                                 <TableCell>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>

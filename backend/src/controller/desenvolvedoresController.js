@@ -1,158 +1,126 @@
-import { prisma } from "../config/prismaClient.js"
+import DesenvolvedorModel from "../model/desenvolvedorModel.js";
+import { buildQuery, getPaginationOptions } from "../services/queryOptions.js";
+
 
 
 export default class DesenvolvvedoresController {
     static async listarDesenvolvedores(req, res) {
-        const { page = 1, limit = 10 } = req.query;
-        const { nome, sexo, idade, data_nascimento, nivel, hobby } = req.query;
-
-        const pageNumber = parseInt(page);
-        const pageSize = parseInt(limit);
-
-        if (isNaN(pageNumber) || isNaN(pageSize) || pageNumber < 1 || pageSize < 1) {
-            return res.status(400).json({ error: 'Parâmetros de paginação inválidos' });
-        }
-
-        const filters = {};
-        if (nome) {
-            filters.nome = { contains: nome, mode: 'insensitive' }
-        }
-        if (sexo) {
-            filters.sexo = { equals: sexo };
-        }
-        if (idade) {
-            filters.idade = { equals: Number(idade) };
-        }
-        if (data_nascimento) {
-            filters.data_nascimento = { equals: data_nascimento };
-        }
-        if (hobby) {
-            filters.hobby = { contains: hobby, mode: 'insensitive' };
-        }
-        if (nivel) {
-            filters.nivel = { nivel: { contains: nivel , mode: 'insensitive'} };
-        }
-
         try {
-            const desenvolvedores = await prisma.desenvolvedor.findMany({
-                skip: (pageNumber - 1) * pageSize,
-                take: pageSize,
-                where: filters,
-                include: {
-                    nivel: true
-                }
-            });
+            const { nome, sexo, data_nascimento, hobby, page, perPage } = req.query;
+            const query = buildQuery({ nome, sexo, data_nascimento, hobby });
+            const options = getPaginationOptions(page, perPage);
 
-            const totalDesenvolvedores = await prisma.desenvolvedor.count({
-                where: filters
-            });
-
-            const lastPage = Math.ceil(totalDesenvolvedores / pageSize);
-
-            const response = {
-                data: desenvolvedores,
+            const desenvolvedores = await DesenvolvedorModel.paginate(query, options);
+            
+            return res.status(200).json({
+                data: desenvolvedores.docs,
                 meta: {
-                    total: totalDesenvolvedores,
-                    per_page: pageSize,
-                    current_page: pageNumber,
-                    last_page: lastPage
-                }
-            };
-
-            if (response.data.length === 0) {
-                return res.status(404).json({ error: "Nenhum desenvolvedor encontrado" });
-            }
-
-            return res.status(200).json(response);
-        } catch (error) {
-            return res.status(500).json({ error: error.message });
-        }
-    }
-
-
-    static async listarDesenvolvedor(req, res) {
-        const { id } = req.params;
-        try {
-            const desenvolvedor = await prisma.desenvolvedor.findUnique({
-                where: {
-                    id: Number(id)
+                    total: desenvolvedores.totalDocs, 
+                    per_page: desenvolvedores.limit, 
+                    current_page: desenvolvedores.page,
+                    last_page: desenvolvedores.totalPages,
                 }
             });
-            if (!desenvolvedor) {
-                return res.status(404).json({ error: "Desenvolvedor não encontrado" });
-            }
-            return res.status(200).json(desenvolvedor);
+
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
         }
     }
+    static async listarDesenvolvedorId(req, res) {
+        try {
+            const { id } = req.params;
+            const desenvolvedor = await DesenvolvedorModel.findById(id);
 
+            if (!desenvolvedor) {
+                return res.status(404).json({ error: true, code: 404, message: 'Desenvolvedor não encontrado' });
+            }
+
+            return res.status(200).json(desenvolvedor);
+
+        } catch (error) {
+            return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
+        }
+    }
     static async criarDesenvolvedor(req, res) {
         try {
-            const { nome, sexo, data_nascimento, hobby, nivel_id, idade } = req.body;
-            const novoDesenvolvedor = await prisma.desenvolvedor.create({
-                data: {
-                    nome,
-                    sexo,
-                    idade,
-                    data_nascimento,
-                    hobby,
-                    nivel_id
-                }
-            });
-            return res.status(201).json(novoDesenvolvedor);
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({ error: error.message });
-        }
-    }
+            const {
+                nome,
+                sexo,
+                data_nascimento,
+                hobby,
+                nivel_id
+            }= req.body;
 
+            const novoDesenvolvedor = new DesenvolvedorModel({
+                nome,
+                sexo,
+                data_nascimento,
+                hobby,
+                nivel_id
+            });
+
+            if (!novoDesenvolvedor) {
+                return res.status(400).json({ error: true, code: 400, message: 'Dados inválidos' });
+            }
+
+            const desenvolvedor = await novoDesenvolvedor.save();
+
+            return res.status(201).json(desenvolvedor);
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
+        }
+    
+    }
     static async atualizarDesenvolvedor(req, res) {
         try {
             const { id } = req.params;
-            const { nome, sexo, idade, data_nascimento, hobby, nivel_id } = req.body;
-            const desenvolvedor = await prisma.desenvolvedor.update({
-                where: {
-                    id: Number(id)
-                },
-                data: {
-                    nome,
-                    sexo,
-                    idade,
-                    data_nascimento,
-                    hobby,
-                    nivel_id
+            const {
+                nome,
+                sexo,
+                data_nascimento,
+                hobby,
+                nivel_id
+            } = req.body;
 
-                }
-            });
-            return res.status(200).json(desenvolvedor);
+            const desenvolvedor = await DesenvolvedorModel.findById(id);
+
+            if (!desenvolvedor) {
+                return res.status(404).json({ error: true, code: 404, message: 'Desenvolvedor não encontrado' });
+            }
+
+            desenvolvedor.nome = nome;
+            desenvolvedor.sexo = sexo;
+            desenvolvedor.data_nascimento = data_nascimento;
+            desenvolvedor.hobby = hobby;
+            desenvolvedor.nivel_id = nivel_id;
+
+            const desenvolvedorAtualizado = await desenvolvedor.save();
+
+            return res.status(200).json(desenvolvedorAtualizado);
+
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
         }
     }
 
     static async deletarDesenvolvedor(req, res) {
-        const { id } = req.params;
         try {
-            const desenvolvedor = await prisma.desenvolvedor.findUnique({
-                where: {
-                    id: Number(id)
-                }
-            });
-            if (!desenvolvedor) {
-                return res.status(400).json({ error: "Desenvolvedor não encontrado" });
-            }
+            const { id } = req.params;
 
-            await prisma.desenvolvedor.delete({
-                where: {
-                    id: Number(id)
-                }
-            });
+            const desenvolvedor = await DesenvolvedorModel.findById(id);
+
+            if (!desenvolvedor) {
+                return res.status(404).json({ error: true, code: 404, message: 'Desenvolvedor não encontrado' });
+            }
+            await DesenvolvedorModel.findByIdAndDelete(id);
+
             return res.status(204).send();
+
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            console.log(error);
+            return res.status(500).json({ error:true, code:500, message: 'Erro interno no servidor!' });
         }
     }
-
-
 }

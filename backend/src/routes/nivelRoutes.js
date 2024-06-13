@@ -5,7 +5,7 @@ const router = express.Router();
 
 router
     .get("/api/niveis", NivelController.listarNiveis)
-    .get("/api/niveis/:id", NivelController.listarNivel)
+    .get("/api/niveis/:id", NivelController.listarNivelId)
     .post("/api/niveis", NivelController.criarNivel)
     .put("/api/niveis/:id", NivelController.atualizarNivel)
     .delete("/api/niveis/:id", NivelController.deletarNivel);

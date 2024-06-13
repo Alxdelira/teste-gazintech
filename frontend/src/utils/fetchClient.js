@@ -14,7 +14,7 @@ const verificarRenderizacao = () => {
 
 // se o método for get os dados serão querys (params) se não será dados mesmo tipo body para post ou patch etc...
 // o isFile é para verificar se está utilizando para requisições de imagem mudar os headers
-export const fetchApi = async (route, method, data,meta, ...props) => {
+export const fetchApi = async (route, method, data, ...props) => {
   try {
     // chama  função para pegar o env da API
     let urlApi = verificarRenderizacao();
@@ -35,7 +35,7 @@ export const fetchApi = async (route, method, data,meta, ...props) => {
       method: method,
       headers: headers,
       body: method !== "GET" && data ? JSON.stringify(data) : null,
-      // cache: "no-cache"
+      cache: "no-cache"
     })
 
     const responseData = await response.json();

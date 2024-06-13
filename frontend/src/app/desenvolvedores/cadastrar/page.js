@@ -32,7 +32,6 @@ export default function CadastrarDesenvolvedor() {
                 data_nascimento: data?.data_nascimento,
                 hobby: data?.hobby,
                 sexo: data?.sexo,
-                idade: data?.idade,
                 // nivel_id: data?.nivel_id
             });
             console.log(res); // Adicione este log para verificar a resposta
@@ -125,24 +124,6 @@ export default function CadastrarDesenvolvedor() {
                                                 <SelectItem value="O">Outro</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="idade"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="idade">Idade</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            id="idade"
-                                            type="number"
-                                            placeholder="Idade"
-                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

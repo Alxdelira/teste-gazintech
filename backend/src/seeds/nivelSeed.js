@@ -1,28 +1,20 @@
-import { prisma } from '../config/prismaClient.js'
+import NivelModel from "../model/nivelModel.js";
+
 
 
 const niveis = [
-    {
-        nivel: 'Junior'
-    },
-    {
-        nivel: 'Pleno'
-    },
-    {
-        nivel: 'Senior'
-    },
-    {
-        nivel: 'Estagiário'
-    },
-    {
-        nivel: 'Trainee'
-    }
+    'Junior',
+    'Pleno',
+    'Senior',
+    'Especialista',
+    'Master',
+    'Estagiário',
+    'Trainee'
 ]
 
 export default async function nivelSeed() {
     for (const nivel of niveis) {
-        await prisma.nivel.create({
-            data: nivel
-        });
+        await NivelModel.create({ nivel });
     }
+
 }
