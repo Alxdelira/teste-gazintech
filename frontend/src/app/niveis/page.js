@@ -1,17 +1,19 @@
 
 import FormBuscaDevs from "@/actions/desenvolvedores/FormBuscaDevs";
 import { Button } from "@/components/ui/button";
-import { fetchApi} from "@/utils/fetchClient";
+import { fetchApi } from "@/utils/fetchClient";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import DataTableNiveis from "@/actions/niveis/DatatableNiveis";
 
 
 
-export default async function Niveis({ searchParams }) {
-    const { data: data, meta } = await fetchApi('/niveis','GET', searchParams);
-    console.log(data, meta);
-    
+export default async function Niveis({ searchParams, serchParamsDevs }) {
+    // const { data: data, meta } = await fetchApi('/niveis','GET', searchParams);
+    const { data, meta } = await fetchApi('/niveis', 'GET', searchParams);
+
+    console.log(meta);
+
 
     return (
         <>
@@ -27,7 +29,11 @@ export default async function Niveis({ searchParams }) {
 
             <FormBuscaDevs querys={searchParams} />
 
-            <DataTableNiveis data={data} meta={meta} serchParams={searchParams} />
+            <DataTableNiveis
+                data={data}
+                meta={meta}
+                serchParams={searchParams}                
+            />
         </>
     );
 }

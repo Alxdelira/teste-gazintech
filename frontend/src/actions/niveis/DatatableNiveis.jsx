@@ -18,10 +18,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Eye, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
 
-export default function DataTableNiveis({ data, meta, searchParams }) {
+export default function DataTableNiveis({ data, meta, searchParams}) {
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [devSelecionado, setDevSelecionado] = useState(null);
     const [sorting, setSorting] = useState([]);
+
 
     const columns = useMemo(
         () => [
@@ -33,6 +34,17 @@ export default function DataTableNiveis({ data, meta, searchParams }) {
                         onClick={() => column.toggleSorting()}
                     >
                         Nível
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                ),                
+            },{
+                accessorKey: "total_developers",
+                header: ({ column }) => (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting()}
+                    >
+                        Quantidade Desenvolvedores
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 ),                
