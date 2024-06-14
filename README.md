@@ -29,10 +29,10 @@
 
   <!-- project description and menu -->
   <p align="center">
-      🛠️ Em Construção...
+      💜 Projeto On-Line...
     <br />
     <a 
-      href="">
+      href="front-gazintech.vercel.app">
       <strong>Ir para o uso agora »</strong>
     </a>
     <br />
@@ -49,13 +49,13 @@
   </p>
 </div>
 
-<!-- ## Preview
+## 📦 Sobre o Projeto
 
 <div align="center">
-  <a href="#">
-      <img src="./assets/modelo.png" width="200" alt="preview" />
-  </a>
-</div> -->
+      <p>
+      Este projeto consiste em uma aplicação para cadastro de desenvolvedores associados a diferentes níveis. A aplicação é composta por um backend que oferece uma API RESTful e um frontend que é uma SPA (Single Page Application) interligada à API.
+      </p>  
+</div>
 
 ## 🔥 Checklist 📝
 ### 🚀 Nível 1
@@ -93,62 +93,93 @@
 
 ### 🚀 Nível 4
 - [x] Disponibilização do backend via Docker                                 
-- [ ] Disponibilização do frontend via Docker                                
-- [ ] Disponibilização dos containers (backend + frontend) via Docker Compose
-- [ ] Publicação do projeto online                                           
+- [x] Disponibilização do frontend via Docker                                
+- [x] Disponibilização dos containers (backend + frontend) via Docker Compose
+- [x] Publicação do projeto online                                           
 
 
 
 
 
 
-## Technologies
+## 🧭 Technologies Back-End
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
 - `cors`: [npm cors](https://www.npmjs.com/package/cors)
 - `dotenv`: [dotenv on GitHub](https://github.com/motdotla/dotenv)
 - `express`: [Express.js on GitHub](https://github.com/expressjs/express)
-- `prisma`: [Prisma on Docs](https://www.prisma.io/docs)
 - `Javascript`: [JavaScript on Docs](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
 - `Swagger`: [swagger-UI on  GitHub](https://github.com/swagger-api/swagger-ui)
+- `Mongo DB Atlas`: [MongoDB - Atlas](https://www.mongodb.com/pt-br)
+- `mongoose`: [Mongoose on GitHub](https://github.com/Automattic/mongoose)
+- `mongoose-paginate-v2`: [npm mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
 
+## 🌐 Technologies Front-End
 
+Este projeto foi desenvolvido com as seguintes tecnologias:
 
-## Rodando o Projeto
+- `@hookform/resolvers`: [npm @hookform/resolvers](https://www.npmjs.com/package/@hookform/resolvers)
+- `@radix-ui/react-dialog`: [npm @radix-ui/react-dialog](https://www.npmjs.com/package/@radix-ui/react-dialog)
+- `@radix-ui/react-dropdown-menu`: [npm @radix-ui/react-dropdown-menu](https://www.npmjs.com/package/@radix-ui/react-dropdown-menu)
+- `@radix-ui/react-label`: [npm @radix-ui/react-label](https://www.npmjs.com/package/@radix-ui/react-label)
+- `@radix-ui/react-popover`: [npm @radix-ui/react-popover](https://www.npmjs.com/package/@radix-ui/react-popover)
+- `@radix-ui/react-select`: [npm @radix-ui/react-select](https://www.npmjs.com/package/@radix-ui/react-select)
+- `@radix-ui/react-slot`: [npm @radix-ui/react-slot](https://www.npmjs.com/package/@radix-ui/react-slot)
+- `@tanstack/react-table`: [npm @tanstack/react-table](https://www.npmjs.com/package/@tanstack/react-table)
+- `axios`: [npm axios](https://www.npmjs.com/package/axios)
+- `class-variance-authority`: [npm class-variance-authority](https://www.npmjs.com/package/class-variance-authority)
+- `clsx`: [npm clsx](https://www.npmjs.com/package/clsx)
+- `cmdk`: [npm cmdk](https://www.npmjs.com/package/cmdk)
+- `dotenv`: [npm dotenv](https://www.npmjs.com/package/dotenv)
+- `lucide-react`: [npm lucide-react](https://www.npmjs.com/package/lucide-react)
+- `next`: [npm next](https://www.npmjs.com/package/next)
+- `react`: [npm react](https://www.npmjs.com/package/react)
+- `react-dom`: [npm react-dom](https://www.npmjs.com/package/react-dom)
+- `react-hook-form`: [npm react-hook-form](https://www.npmjs.com/package/react-hook-form)
+- `react-toastify`: [npm react-toastify](https://www.npmjs.com/package/react-toastify)
+- `sharp`: [npm sharp](https://www.npmjs.com/package/sharp)
+- `tailwind-merge`: [npm tailwind-merge](https://www.npmjs.com/package/tailwind-merge)
+- `tailwindcss-animate`: [npm tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
+- `zod`: [npm zod](https://www.npmjs.com/package/zod)
+
+## ⚓ Rodando o Projeto
 
 Você precisará do [Node.js](https://nodejs.org) e [Docker](https://www.docker.com/get-started/) instalado no seu computador para rodar este app.
 
+🔧 Execute o script para rodar localmente o back-end
 ```bash
- git clone https://github.com/Alxdelira/teste-gazintech.git
- cd teste-gazin-tech
- cd backend
- cp .env.example .env
- cd teste-gazin-tech
+  git clone https://github.com/Alxdelira/teste-gazintech.git
+
+  cd teste-gazin-tech
+
+  cd backend
+
+  cp .env.example .env
+  # Configure o .env de acordo com as portas disponiveis 
+  npm install 
+
+  npm run dev
+ ```
+🔧 Para rodar localmente o back-end
+```bash
+  cd frontend
+
+  cp .env.example .env
+  # Configure o .env de acordo com as portas disponiveis 
+  npm install 
+
+  npm run dev
+ ```
+🚢 usando `docker-compose.yml` para rodar as imagens
+```bash 
+ # diretorio principal execute o seguinte comando no terminal
+
  docker compose -f docker-compose.yml up -d
- docker compose -f docker-compose.yml up --build --force-recreate
- npm install
 
- npm run seed
+ docker exec backend/ npm run seed
 ```
 
-
-## Usage
-
-🔧 Run the script
-
-```bash
-$ npm run dev
-
-```
-Rodando a API no modo de desenvolvimento.<br/>
-## Teste
-
-🔧 Run the script
-
-```bash
-$ npm run test
-```
 
 ## Autor
 

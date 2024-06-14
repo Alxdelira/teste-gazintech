@@ -11,7 +11,8 @@ services:
       - "3040:3040"
     environment:
       - NODE_ENV=production
-      - PORT=3040
+      - PORT=3040      
+      - DATABASE_URL=mongodb://root:root123@mongodb:27017
 
   database:
     image: mongo:latest # Imagem do MongoDB
@@ -32,8 +33,10 @@ services:
     ports:
       - "3005:3005"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=3005
+      - NEXT_PUBLIC_API_URL=http://localhost:3040/api
+      - API_URL=http://localhost:3040/api
 
     volumes:
       - /app/node_modules
