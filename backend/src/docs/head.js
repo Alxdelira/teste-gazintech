@@ -21,6 +21,10 @@ const swaggerOptions = {
         },
         servers: [
             {
+                url: "https://backend-gazintech.vercel.app",
+                description: "API em produção",
+            },
+            {
                 url: `http://localhost:${process.env.PORT}`,
                 description: "API em desenvolvimento",
             }
