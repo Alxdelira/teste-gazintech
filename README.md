@@ -76,18 +76,18 @@
 - [x] Tratamento de Exceções / Retornos erros concisos                      
 - [x] Paginação na listagem de níveis                                       
 - [x] Paginação na listagem de desenvolvedores                              
-- [ ] Mensagens de sucesso e/ou erros (Ex. Toast Notification)              
-- [ ] Confirmação para exclusão de itens                                    
-- [ ] Ordenação das tabelas clicando no nome da coluna                      
-- [ ] Validações de campos                                                  
-- [ ] Na página de níveis adicionar uma coluna com a qtde de devs associados
+- [x] Mensagens de sucesso e/ou erros (Ex. Toast Notification)              
+- [x] Confirmação para exclusão de itens                                    
+- [x] Ordenação das tabelas clicando no nome da coluna                      
+- [x] Validações de campos                                                  
+- [x] Na página de níveis adicionar uma coluna com a qtde de devs associados
 
 ### 🚀 Nível 3
 - [x] Tipagem de dados                      
 - [x] Organização e estrutura de pastas     
-- [ ] Reaproveitamento de código            
-- [ ] Clean Code                            
-- [ ] Arquitetura: Clean, Onion, Hexagonal  
+- [x] Reaproveitamento de código            
+- [x] Clean Code                            
+- [x] Arquitetura: Clean, Onion, Hexagonal  
 - [ ] Testes unitários / Feature            
 - [x] Documentação código/endpoint (swagger)
 
@@ -120,23 +120,16 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 Você precisará do [Node.js](https://nodejs.org) e [Docker](https://www.docker.com/get-started/) instalado no seu computador para rodar este app.
 
 ```bash
-$ git clone https://github.com/Alxdelira/teste-gazintech.git
-$ cd teste-gazin-tech
+ git clone https://github.com/Alxdelira/teste-gazintech.git
+ cd teste-gazin-tech
+ cd backend
+ cp .env.example .env
+ cd teste-gazin-tech
+ docker compose -f docker-compose.yml up -d
+ docker compose -f docker-compose.yml up --build --force-recreate
+ npm install
 
-$ cd backend
-$ cp .env.example .env
-
-$ cd teste-gazin-tech
-$ docker compose -f docker-compose.yml up -d
-
-#Usando força bruta para recriar a imagem (Não recomendado)
-$ docker compose -f docker-compose.yml up --build --force-recreate
-
-$ npm install
-
-$ npx prisma migrate dev --name init
-
-$ npm run seed
+ npm run seed
 ```
 
 
