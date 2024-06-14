@@ -7,7 +7,7 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node src/seeds/seeds.js",
-    "start": "npx prisma generate node server.js",
+    "start": "node server.js",
     "docker:kill": "sudo kill -9 $(sudo lsof -t -i:3040) || true",
     "docker": "npm run docker:kill && docker-compose up -d --build --force-recreate"
   },
