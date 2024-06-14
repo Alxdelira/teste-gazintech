@@ -6,6 +6,7 @@ import {
     getSortedRowModel,
     flexRender,
 } from "@tanstack/react-table";
+import { toast } from 'react-toastify';
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -17,12 +18,36 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, MoreHorizontal, Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import PaginationComponent from "@/components/app/PaginationComponent";
+import Modal from "@/components/app/Modal";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { fetchApi } from "@/utils/fetchClient";
+import actionRevalidateTag from "../actionRevalidateTag";
+import VisualizarNivel from "./VisualizarNivel";
+import { useRouter } from "next/navigation";
 
-export default function DataTableNiveis({ data, meta, searchParams}) {
+export default function DataTableNiveis({ data, meta, searchParams }) {
+    let router = useRouter();
     const [modalVisualizar, setModalVisualizar] = useState(false);
-    const [devSelecionado, setDevSelecionado] = useState(null);
-    const [sorting, setSorting] = useState([]);
+    const [modalRemover, setModalRemover] = useState(false);
+    const [nivelSelecionado, setNivelSelecionado] = useState(null);
 
+    async function removeNivel() {
+        try {
+            const res = await fetchApi(`/niveis/${nivelSelecionado?._id}`, 'DELETE');
+            if (res.error) {
+                toast.error(res.message);
+            } else {
+                toast.success("Nível removido com sucesso");
+                actionRevalidateTag('niveis');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Ocorreu um erro inesperado, contate o Administrador");
+        } finally {
+            setModalRemover(false);
+            setNivelSelecionado(null);
+        }
+    }
 
     const columns = useMemo(
         () => [
@@ -36,8 +61,8 @@ export default function DataTableNiveis({ data, meta, searchParams}) {
                         Nível
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
-                ),                
-            },{
+                ),
+            }, {
                 accessorKey: "total_developers",
                 header: ({ column }) => (
                     <Button
@@ -47,7 +72,7 @@ export default function DataTableNiveis({ data, meta, searchParams}) {
                         Quantidade Desenvolvedores
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
-                ),                
+                ),
             },
             {
                 id: "actions",
@@ -73,7 +98,10 @@ export default function DataTableNiveis({ data, meta, searchParams}) {
                             >
                                 <Pencil className="h-4 w-4" /> Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="flex gap-2">
+                            <DropdownMenuItem
+                                onClick={() => handleRemover(row.original)}
+                                className="flex gap-2"
+                            >
                                 <Trash2 className="h-4 w-4" /> Excluir
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -98,15 +126,25 @@ export default function DataTableNiveis({ data, meta, searchParams}) {
         getSortedRowModel: getSortedRowModel(),
     });
 
-    const handleVisualizar = (desenvolvedor) => {
+    const handleVisualizar = (nivel) => {
         setModalVisualizar(true);
-        setDevSelecionado(desenvolvedor);
+        setNivelSelecionado(nivel);
     };
 
     const handleCloseModal = () => {
         setModalVisualizar(false);
-        setDevSelecionado(null);
+        setNivelSelecionado(null);
     };
+
+    const handleRemover = (nivel) => {
+        setModalRemover(true);
+        setNivelSelecionado(nivel);
+    }
+
+    const handleEditar = (nivel) => {
+        router.push(`/niveis/editar/${nivel._id}`);
+    }
+
 
     return (
         <>
@@ -148,8 +186,31 @@ export default function DataTableNiveis({ data, meta, searchParams}) {
                     querys={searchParams}
                 />
             )}
+            <Modal
+                isOpen={modalVisualizar}
+                onClose={handleCloseModal}
+                title={"Visualizar Nível"}
+                className={"w:5/6 lg:w-4/6 max-h-[90%]"}
+            >
+                <VisualizarNivel nivel={nivelSelecionado} />
+            </Modal>
 
-            
+            <Dialog open={modalRemover} onOpenChange={setModalRemover}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Remover Nível</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <DialogDescription>
+                            Tem certeza que deseja remover o nível?
+                        </DialogDescription>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="destructive" onClick={removeNivel}>Remover</Button>
+                        <Button onClick={() => setModalRemover(false)}>Cancelar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

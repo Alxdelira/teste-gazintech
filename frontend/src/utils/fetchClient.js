@@ -37,8 +37,7 @@ export const fetchApi = async (route, method, data, ...props) => {
       body: method !== "GET" && data ? JSON.stringify(data) : null,
       cache: 'no-store'
     })
-
-    const responseData = await response.json();
+    const responseData = response.statusText === 'No Content'?  {} : await response.json();
 
     // se erro retorna o array de dados vazio
     if (responseData?.error) {
@@ -46,7 +45,7 @@ export const fetchApi = async (route, method, data, ...props) => {
         data: [],
         meta: responseData?.meta ?? {},
         error: true,
-        message: responseData?.error ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
+        message: responseData?.message ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
       };
 
     } else {
@@ -55,7 +54,6 @@ export const fetchApi = async (route, method, data, ...props) => {
 
   } catch (error) {
     // se erro retorna o array de dados vazio
-
     return {
       data: [],
       meta: {},

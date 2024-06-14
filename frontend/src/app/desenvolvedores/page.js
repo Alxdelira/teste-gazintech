@@ -1,15 +1,18 @@
 import DataTableDevs from "@/actions/desenvolvedores/DataTableDevs";
 import FormBuscaDevs from "@/actions/desenvolvedores/FormBuscaDevs";
 import { Button } from "@/components/ui/button";
-import { fetchApi, getData } from "@/utils/fetchClient";
+import { fetchApi} from "@/utils/fetchClient";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
 
 
 export default async function Desenvolvedores({ searchParams }) {
-    const { data: data, meta } = await fetchApi('/desenvolvedores','GET', searchParams);
-    console.log(meta);
+    const { data: data, meta } = await fetchApi('/desenvolvedores','GET', searchParams, {
+        next: {
+            tags:['desenvolvedores']
+        }
+    });
     
 
     return (

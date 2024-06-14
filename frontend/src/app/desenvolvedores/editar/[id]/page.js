@@ -9,9 +9,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { z } from "zod";
+import { formatarDataInput, mascaraSexo } from "@/utils/mascara";
+import { useRouter } from "next/navigation";
+import actionRevalidateTag from "@/actions/actionRevalidateTag";
 
-export default function CadastrarDesenvolvedor() {
+
+export default function EditarDesenvolvedor({ params }) {
+
+    const [desenvolvedor, setDesenvolvedor] = useState(null);
+    let router = useRouter();
+
     const schema = z.object({
         nome: z.string({ required_error: "O nome é obrigatorio" }).trim().min(1, { message: "O nome é obrigatorio" }),
         data_nascimento: z.string({ required_error: "A data de nascimento é obrigatorio" }).trim().min(1, { message: "A data de nascimento é obrigatorio" }),
@@ -22,17 +31,40 @@ export default function CadastrarDesenvolvedor() {
 
     const form = useForm({
         resolver: zodResolver(schema),
-        defaultValues: {
-            nome: "",
-            data_nascimento: "",
-            hobby: "",
+        values: {
+            nome: desenvolvedor?.nome,
+            data_nascimento: formatarDataInput(desenvolvedor?.data_nascimento),
+            hobby: desenvolvedor?.hobby,
+            sexo: desenvolvedor?.sexo,
         }
 
     });
-
-    async function cadastrarDesenvolvedor(data) {
+    async function getDesenvolvedor() {
         try {
-            const res = await fetchApi('/desenvolvedores', 'POST', {
+            const res = await fetchApi(`/desenvolvedores/${params?.id}`, 'GET');
+            console.log(res);
+            if (res.error) {
+                toast.error(res.error.message);
+            } else {
+                setDesenvolvedor(res);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Ocorreu um erro inesperado, contate o Administrador");
+        }
+    }
+
+    useEffect(() => {
+        if(params?.id){
+            getDesenvolvedor();           
+        }
+
+    },[params]);
+
+
+    async function editarDesenvolvedor(data) {
+        try {
+            const res = await fetchApi(`/desenvolvedores/${params?.id}`, 'PUT', {
                 nome: data?.nome,
                 data_nascimento: data?.data_nascimento,
                 hobby: data?.hobby,
@@ -43,8 +75,9 @@ export default function CadastrarDesenvolvedor() {
             if (res.error) {
                 toast.error(res.message);
             } else {
-                toast.success("Desenvolvedor cadastrado com sucesso");
-                form.reset();
+                actionRevalidateTag('desenvolvedores');
+                router.push("/desenvolvedores");
+                toast.success("Desenvolvedor Atualizado com sucesso");
             }
         } catch (error) {
             console.error(error);
@@ -55,9 +88,9 @@ export default function CadastrarDesenvolvedor() {
 
     return (
         <>
-            <h1 className="font-semibold text-2xl">Cadastrar Desenvolvedor</h1>
+            <h1 className="font-semibold text-2xl">Editar Desenvolvedor</h1>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(cadastrarDesenvolvedor)} className="mt-4">
+                <form onSubmit={form.handleSubmit(editarDesenvolvedor)} className="mt-4">
                     <div className="grid grid-cols-3 gap-2">
                         <FormField
                             control={form.control}
@@ -117,7 +150,7 @@ export default function CadastrarDesenvolvedor() {
                                 <FormItem>
                                     <FormLabel>Sexo</FormLabel>
                                     <FormControl>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecione seu sexo" />
                                             </SelectTrigger>
@@ -146,6 +179,8 @@ export default function CadastrarDesenvolvedor() {
                                             selecionado={field.value}
                                             setSelecionado={field.onChange}
                                             apiResponseAccess={"data"}
+                                            endpointGetForId={"/niveis/id"}
+                                            idGetForId={desenvolvedor?.nivel_id?._id}
                                             renderOption={(dados) => (
                                                 <div className="flex flex-col w-full">
                                                     <span>{dados?.nivel}</span>
@@ -163,7 +198,7 @@ export default function CadastrarDesenvolvedor() {
                         <Link href={"/desenvolvedores"} className="lg">
                             <Button variant="destructive" size="lg">Cancelar</Button>
                         </Link>
-                        <Button size="lg"  >Cadastrar</Button>
+                        <Button size="lg"  >Atualizar</Button>
                     </div>
                 </form>
             </Form>

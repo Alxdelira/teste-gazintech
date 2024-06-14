@@ -32,3 +32,22 @@ export const mascaraSexo = (sexo) => {
             return 'Não informado';
     }
 }
+export const formatarDataInput = (dataParam) => {
+    if (dataParam) {
+      const data = new Date(dataParam);
+  
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+  
+      if (/^\d{4}\-\d{2}\-\d{2}T/.test(dataParam)) {
+        const horas = String(data.getHours()).padStart(2, '0');
+        const minutos = String(data.getMinutes()).padStart(2, '0');
+  
+        return `${ano}-${mes}-${dia}`;
+      } else {
+        return `${ano}-${mes}-${dia}`;
+      }
+    }
+  }
+  

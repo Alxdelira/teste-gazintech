@@ -1,11 +1,12 @@
 'use client'
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
     useReactTable,
     getCoreRowModel,
     getSortedRowModel,
     flexRender,
 } from "@tanstack/react-table";
+import { toast } from 'react-toastify';
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -20,12 +21,34 @@ import PaginationComponent from "@/components/app/PaginationComponent";
 import Modal from "@/components/app/Modal";
 import VisualizarDesenvolvedor from "./VisualizarDesenvolvedor";
 import { formatarData, mascaraSexo } from "@/utils/mascara";
-import RemoverDev from "./RemoverDev";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { fetchApi } from "@/utils/fetchClient";
+import actionRevalidateTag from "../actionRevalidateTag";
+import { useRouter } from "next/navigation";
 
 export default function DataTableDevs({ data, meta, searchParams }) {
+    let router = useRouter();
     const [modalVisualizar, setModalVisualizar] = useState(false);
     const [modalRemover, setModalRemover] = useState(false);
-    const [devSelecionado, setDevSelecionado] = useState(false);
+    const [devSelecionado, setDevSelecionado] = useState(null);
+
+    async function removeDev() {
+        try {
+            const res = await fetchApi(`/desenvolvedores/${devSelecionado?._id}`, 'DELETE');
+            if (res.error) {
+                toast.error(res.message);
+            } else {
+                toast.success("Desenvolvedor removido com sucesso");
+                actionRevalidateTag('desenvolvedores');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Ocorreu um erro inesperado, contate o Administrador");
+        } finally {
+            setModalRemover(false);
+            setDevSelecionado(null);
+        }
+    }
 
     const columns = useMemo(
         () => [
@@ -125,8 +148,6 @@ export default function DataTableDevs({ data, meta, searchParams }) {
         []
     );
 
-
-
     const table = useReactTable({
         data,
         columns,
@@ -148,14 +169,13 @@ export default function DataTableDevs({ data, meta, searchParams }) {
         setModalRemover(true);
         setDevSelecionado(desenvolvedor);
     }
-
-    const handleModalRemover = () => {
-        setModalRemover(false);
-        setDevSelecionado(null);
+    const handleEditar = (desenvolvedor) => {
+        router.push(`/desenvolvedores/editar/${desenvolvedor._id}`);
     }
 
     return (
         <>
+
             <section className="mt-4">
                 <p>Total de Desenvolvedores: {meta.total} </p>
                 <Table className="mt-2">
@@ -203,19 +223,23 @@ export default function DataTableDevs({ data, meta, searchParams }) {
             >
                 <VisualizarDesenvolvedor desenvolvedor={devSelecionado} />
             </Modal>
-            <Modal
-                isOpen={modalRemover}
-                onClose={handleModalRemover}
-                title={"Remover Desenvolvedor"}
-                className={"w:3/8 lg:w-3/8 max-h-[90%]"}
 
-            >
-                <RemoverDev
-                    onRemove={handleModalRemover}
-                    onClick={handleModalRemover}
-                    desenvolvedor={devSelecionado}
-                />
-            </Modal>
+            <Dialog open={modalRemover} onOpenChange={setModalRemover}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Remover Desenvolvedor</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <DialogDescription>
+                            Tem certeza que deseja remover o desenvolvedor?
+                        </DialogDescription>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="destructive" onClick={removeDev}>Remover</Button>
+                        <Button onClick={() => setModalRemover(false)}>Cancelar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

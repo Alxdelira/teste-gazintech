@@ -58,24 +58,34 @@ export default class NivelController {
         } catch (error) {
             return res.status(500).json({ error: true, code: 500, message: 'Erro interno no servidor!' });
         }
-    }
-    static async criarNivel(req, res) {
+    }static async criarNivel(req, res) {
         try {
-            const {
-                nivel,
-            } = req.body;
-
-            const novoNivel = new NivelModel({
-                nivel,
-            });
-
+            const { nivel } = req.body;
+    
+            if (!nivel) {
+                return res.status(400).json({ error: true, code: 400, message: 'O campo "nivel" é obrigatório' });
+            }
+    
+            const novoNivel = new NivelModel({ nivel });
+    
+            // Verificação adicional para garantir que o objeto não está vazio
+            if (Object.keys(novoNivel).length === 0) {
+                return res.status(400).json({ error: true, code: 400, message: 'Nivel não pode ser vazio' });
+            }
+    
             await novoNivel.save();
-            return res.status(201).json(novoNivel);
-
+            return res.status(201).json({ data: novoNivel, meta: {}, error: false, message: 'Nível criado com sucesso' });
         } catch (error) {
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({ error: true, code: 400, message: 'Dados inválidos fornecidos' });
+            }
+    
+            console.error(error); // Log do erro para depuração
             return res.status(500).json({ error: true, code: 500, message: 'Erro interno no servidor!' });
         }
     }
+    
+    
     static async atualizarNivel(req, res) {
         try {
             const { id } = req.params;
@@ -110,7 +120,6 @@ export default class NivelController {
             ]);
 
             const qtdDev = DesenvolvedoresPorNivel[0]._id.toString();
-            console.log( qtdDev, req.params.id);
 
             if (!nivel) {
                 return res.status(404).json({ error: true, code: 404, message: 'Nivel não encontrado' });

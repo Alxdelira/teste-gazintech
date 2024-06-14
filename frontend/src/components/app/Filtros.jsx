@@ -29,9 +29,7 @@ export default function Filtros({ isSearching, primeiroCampo, children }) {
 
           <div className="flex justify-between items-end mb-1">
             <h1 className="font-semibold text-lg">Filtros</h1>
-            <button disabled={true} type="button" className="flex items-center text-sm gap-2 font-semibold">
-              Mais filtros <ChevronDown />
-            </button>
+            
           </div>
 
 
@@ -54,7 +52,7 @@ export default function Filtros({ isSearching, primeiroCampo, children }) {
         <div className="flex justify-between items-end mb-1">
 
           <h1 className="font-semibold text-lg">Filtros</h1>
-          <button disabled={!windowLoaded} type="button" className="flex items-center text-sm gap-2 font-semibold"
+          {/* <button disabled={!windowLoaded} type="button" className="flex items-center text-sm gap-2 font-semibold"
             onClick={() => {
               let queryParams = new URLSearchParams(window.location.search);
 
@@ -71,7 +69,7 @@ export default function Filtros({ isSearching, primeiroCampo, children }) {
             ) : (
               <>Mais filtros <ChevronDown /> </>
             )}
-          </button>
+          </button> */}
         </div>
 
 

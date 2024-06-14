@@ -53,23 +53,23 @@ export default function ComboboxAPI({
   async function getForId() {
     const response = await fetchApi(endpointGetForId?.replace("id", idGetForId), "GET");
     console.log(response);
-    if (Array.isArray(response?.data)) {
-      setResponse({ data: response?.data });
-      setSelecionado(response?.data[0]);
+    if (Array.isArray(response)) {
+      setResponse({ data: response });
+      setSelecionado(response);
     } else {
-      setResponse({ data: [response?.data] });
-      setSelecionado(response?.data);
+      setResponse({ data: [response] });
+      setSelecionado(response);
     }
   }
 
   useEffect(() => {
-    if (inputValue.length > 0) {
-      let getApi = setTimeout(() => {
-        debouncedApiCall();
-      }, 1000);
 
-      return () => clearTimeout(getApi);
-    }
+    let getApi = setTimeout(() => {
+      debouncedApiCall();
+    }, 1000);
+
+    return () => clearTimeout(getApi);
+
   }, [inputValue]);
 
   useEffect(() => {
